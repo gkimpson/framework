@@ -92,6 +92,15 @@ class CacheArrayStoreTest extends TestCase
         $this->assertNull($store->get('key'));
     }
 
+    public function testTouchDoesNotInterpretDotsInCacheKeys(): void
+    {
+        $store = new ArrayStore;
+        $store->put('foo', 'bar', 60);
+
+        $this->assertFalse($store->touch('foo.value', 60));
+        $this->assertSame('bar', $store->get('foo'));
+    }
+
     public function testStoreItemForeverProperlyStoresInArray()
     {
         $mock = $this->getMockBuilder(ArrayStore::class)->onlyMethods(['put'])->getMock();
